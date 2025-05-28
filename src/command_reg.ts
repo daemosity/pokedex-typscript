@@ -1,18 +1,12 @@
-import { commandExit } from "./command_exit";
+import { commandExitRegistration } from "./command_exit.js";
+import { commandHelpRegistration } from "./command_help.js";
+import { CLIRegistry } from "./command.js";
 
-export type CLICommand = {
-  name: string;
-  description: string;
-  callback: (commands: Record<string, CLICommand>) => void;
-};
-
-export function getCommands(): Record<string, CLICommand> {
+export function getCommands(): CLIRegistry {
   return {
-    exit: {
-      name: "exit",
-      description: "Exits the pokedex",
-      callback: commandExit,
-    },
-    // can add more commands here
+    help: commandHelpRegistration,
+    exit: commandExitRegistration
   };
 }
+
+export {}
