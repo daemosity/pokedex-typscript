@@ -1,33 +1,23 @@
-import readline from "node:readline";
-import { getCommands } from "./command_reg.js";
-import { CLIRegistry } from "./command.js";
+import { initState, type State } from "./state.js";
 
 export function cleanInput(input: string): string[] {
   const splitInput = input.split(" ").filter(x => x !== "");
   return splitInput
 }
 
-type readlineInterface = readline.Interface;
-
-function newREPL(): readlineInterface {return readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    prompt: `Pokedex >> `,
-})};
-
 function outputSpacer(boundary: string = "") {
   console.log(boundary);
 };
 
-function handleCommands(input: string[], commands: CLIRegistry) {
+function handleCommands(cleanedInput: string[], state: State) {
 
-    if (input.length > 0) {
+    if (cleanedInput.length > 0) {
       outputSpacer()
 
-      const [command, ...args] = input;
-      if (Object.keys(commands).includes(command)) {
-        const clicommand = commands[command]
-        clicommand.callback(commands)
+      const {commands: cliCommands} = state;
+      const [command, ...args] = cleanedInput;
+      if (Object.keys(cliCommands).includes(command)) {
+        cliCommands[command].callback(state);
       } else {
         console.log("Unknown command")
       }
@@ -37,12 +27,12 @@ function handleCommands(input: string[], commands: CLIRegistry) {
 };
 
 export function startREPL() {
-  const r1 = newREPL();
-  const commands = getCommands();
-  r1.prompt();
-  r1.on('line', (input) => {
-    const cleanedInput = cleanInput(input);
-    handleCommands(cleanedInput, commands);
-    r1.prompt();
+  const state = initState();
+  const {input: inputReader} = state
+  inputReader.prompt();
+  inputReader.on('line', (userInput) => {
+    const cleanedInput = cleanInput(userInput);
+    handleCommands(cleanedInput, state);
+    inputReader.prompt();
   })
 };
