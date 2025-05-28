@@ -19,7 +19,6 @@ export function startREPL() {
   r1.on('line', (input) => {
     const cleanedInput = cleanInput(input);
     if (cleanedInput.length > 0) {
-      console.log(`Your command was: ${cleanedInput[0].toLowerCase()}`)
     }
     r1.prompt()
   })
