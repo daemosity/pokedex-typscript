@@ -1,5 +1,5 @@
 export type PokemonRoot = {
-  abilities: Ability[]
+  abilities: Ability[] 
   base_experience: number
   cries: Cries
   forms: NameAndURL[]

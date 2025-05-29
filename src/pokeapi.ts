@@ -26,10 +26,9 @@ export class PokeAPI {
             throw new Error(`Response status: ${response.status}`);
         }
 
-        const json = await response.json();
-        this.#pokecache.add(url, json);
-
-        return json as ShallowLocations;
+        const shallowLocation = await response.json() as ShallowLocations;
+        await this.#pokecache.add(url, shallowLocation);
+        return shallowLocation;
 
     } catch (err) {
         if (err instanceof Error) {
@@ -52,9 +51,9 @@ export class PokeAPI {
               throw new Error(`Response status: ${response.status}`);
           }
 
-          const json = await response.json();
-          this.#pokecache.add(locationName, json);
-          return json as Location;
+          const location = await response.json() as Location;
+          await this.#pokecache.add(locationName, location);
+          return location;
 
       } catch (err) {
           if (err instanceof Error) {
@@ -78,9 +77,9 @@ export class PokeAPI {
               throw new Error(`Response status: ${response.status}`);
           }
 
-          const json = await response.json();
-          this.#pokecache.add(pokemonName, json);
-          return json as PokemonRoot;
+          const pokemonInfo = await response.json() as PokemonRoot;
+          await this.#pokecache.add(pokemonName, pokemonInfo);
+          return pokemonInfo;
 
       } catch (err) {
           if (err instanceof Error) {

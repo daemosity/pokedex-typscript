@@ -1,7 +1,5 @@
 import type { State, CLICommand } from "src/state";
 
-const baseUrl = "https://pokeapi.co/api/v2/pokemon/" as const;
-
 async function commandCatch(state:State, ...args: string[]) {
     const {pokedex, pokeAPI} = state;
     const pokemonName = args[0];
@@ -10,6 +8,8 @@ async function commandCatch(state:State, ...args: string[]) {
     if (pokemonInfo) {
         if (isPokemonCaught(pokemonInfo.base_experience)) {
             console.log(`${pokemonName} was caught!`)
+            pokedex.set(pokemonName, pokemonInfo)
+            console.log("You may now inspect it with the inspect command.")
         } else {
             console.log(`${pokemonName} escaped!`)
         }
@@ -23,7 +23,7 @@ function isPokemonCaught(baseExp: number): boolean {
 }
 
 export const commandCatchRegistration: CLICommand = {
-      name: "explore",
-      description: "lists all pokemon in a given area",
+      name: "catch",
+      description: "attempts to catch a given pokemon",
       callback: commandCatch
 }
