@@ -1,6 +1,6 @@
-import { State, CLICommand } from "./state.js";
+import { type State, type CLICommand } from "../state.js";
 
-function commandHelp(state: State) {
+async function commandHelp(state: State) {
     console.log("Welcome to the Pokedex!")
     console.log("Usage:\n");
     const { commands } = state;

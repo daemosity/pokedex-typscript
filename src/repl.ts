@@ -9,7 +9,7 @@ function outputSpacer(boundary: string = "") {
   console.log(boundary);
 };
 
-function handleCommands(cleanedInput: string[], state: State) {
+async function handleCommands(cleanedInput: string[], state: State) {
 
     if (cleanedInput.length > 0) {
       outputSpacer()
@@ -17,12 +17,17 @@ function handleCommands(cleanedInput: string[], state: State) {
       const {commands: cliCommands} = state;
       const [command, ...args] = cleanedInput;
       if (Object.keys(cliCommands).includes(command)) {
-        cliCommands[command].callback(state);
+        try {
+          await cliCommands[command].callback(state, ...args);
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            console.error(err);
+          }
+        }
       } else {
         console.log("Unknown command")
       }
-
-      outputSpacer()
+      outputSpacer();
   }
 };
 
@@ -32,7 +37,6 @@ export function startREPL() {
   inputReader.prompt();
   inputReader.on('line', (userInput) => {
     const cleanedInput = cleanInput(userInput);
-    handleCommands(cleanedInput, state);
-    inputReader.prompt();
+    handleCommands(cleanedInput, state).then(() => inputReader.prompt());
   })
 };
